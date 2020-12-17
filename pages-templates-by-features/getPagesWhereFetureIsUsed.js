@@ -12,12 +12,9 @@ const featuresList = [
   "minute-by-minute/default",
 ];
 
-// const filePath = "./data/sandbox/pagesInfo.json"
-const filePath = "./data/sandbox/templatesInfo.json";
-
 ///////////////////////////////////////////////////////////////////////////////////
 
-const { promises: fs } = require("fs");
+const { promises: fs, writeFile } = require("fs");
 
 async function getContent(filePath, encoding = "utf-8") {
   if (!filePath) {
@@ -26,8 +23,8 @@ async function getContent(filePath, encoding = "utf-8") {
   return fs.readFile(filePath, { encoding });
 }
 
-(async () => {
-  const pagesInfoFile = await getContent(filePath);
+const generateFile = async (infoFilePath, outputFileName) => {
+  const pagesInfoFile = await getContent(infoFilePath);
 
   const pagesInfo = JSON.parse(pagesInfoFile);
 
@@ -42,5 +39,22 @@ async function getContent(filePath, encoding = "utf-8") {
 
     return result;
   });
-  console.log(pagesWhereFeatureIsUsed);
-})();
+  writeFile(
+    outputFileName,
+    JSON.stringify(pagesWhereFeatureIsUsed),
+    "utf8",
+    (err) => {
+      if (err) throw err;
+      console.log(`Archivo "${outputFileName}" generado`);
+    }
+  );
+};
+
+generateFile(
+  "./data/sandbox/pagesInfo.json",
+  "./pages-templates-by-features/output/pagesByFeatures.json"
+);
+generateFile(
+  "./data/sandbox/templatesInfo.json",
+  "./pages-templates-by-features/output/templatesByFeatures.json"
+);
