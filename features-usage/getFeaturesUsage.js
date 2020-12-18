@@ -1,3 +1,6 @@
+// const env = "sandbox";
+const env = "production";
+
 const { promises: fs, writeFile } = require("fs");
 
 async function getContent(filePath, encoding = "utf-8") {
@@ -8,14 +11,14 @@ async function getContent(filePath, encoding = "utf-8") {
 }
 
 const generateFile = async (outputFileName) => {
-  const featuresListFile = await getContent("./data/sandbox/featuresList.json");
+  const featuresListFile = await getContent(`./data/${env}/featuresList.json`);
   const featuresList = JSON.parse(featuresListFile);
 
-  const pagesInfoFile = await getContent("./data/sandbox/pagesInfo.json");
+  const pagesInfoFile = await getContent(`./data/${env}/pagesInfo.json`);
   const pageInfo = JSON.parse(pagesInfoFile);
 
   const templatesInfoFile = await getContent(
-    "./data/sandbox/templatesInfo.json"
+    `./data/${env}/templatesInfo.json`
   );
   const templatesInfo = JSON.parse(templatesInfoFile);
 
@@ -51,4 +54,4 @@ const generateFile = async (outputFileName) => {
   );
 };
 
-generateFile("./features-usage/output/featuresUsage.json");
+generateFile(`./features-usage/output/featuresUsage-${env}.json`);
